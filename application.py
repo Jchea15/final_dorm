@@ -20,7 +20,7 @@ if app.config["DEBUG"]:
         return response
 
 # configure CS50 Library to use SQLite database
-db = SQL("sqlite:///mashup.db")
+db = SQL("sqlite:///rooms.db")
 
 @app.route("/")
 def index():
@@ -29,18 +29,16 @@ def index():
         raise RuntimeError("API_KEY not set")
     return render_template("index.html", key=os.environ.get("API_KEY"))
 
-@app.route("/articles")
-def articles():
-    """Look up articles for geo."""
-
-    # TODO
-    return jsonify([])
-
 @app.route("/search")
 def search():
     """Search for places that match query."""
 
-    # TODO
+    # Have to add actual selection functionality, right now is meant for search bar
+    room=request.args.get("room")+"%"
+    floor=request.args.get("floor")+"%"
+    dorm=request.args.get("dorm")+"%"
+    selection= db.execute("SELECT * FROM rooms WHERE room LIKE :room AND floor LIKE :floor AND dorm LIKE :dorm", room=room, floor=floor, dorm=dorm)
+    return jsonify(selection)
     return jsonify([])
 
 @app.route("/update")
@@ -69,9 +67,9 @@ def update():
     if (sw_lng <= ne_lng):
 
         # doesn't cross the antimeridian
-        rows = db.execute("""SELECT * FROM places
+        rows = db.execute("""SELECT * FROM rooms
             WHERE :sw_lat <= latitude AND latitude <= :ne_lat AND (:sw_lng <= longitude AND longitude <= :ne_lng)
-            GROUP BY country_code, place_name, admin_code1
+            GROUP BY room, floor, dorm
             ORDER BY RANDOM()
             LIMIT 10""",
             sw_lat=sw_lat, ne_lat=ne_lat, sw_lng=sw_lng, ne_lng=ne_lng)
@@ -79,9 +77,9 @@ def update():
     else:
 
         # crosses the antimeridian
-        rows = db.execute("""SELECT * FROM places
+        rows = db.execute("""SELECT * FROM rooms
             WHERE :sw_lat <= latitude AND latitude <= :ne_lat AND (:sw_lng <= longitude OR longitude <= :ne_lng)
-            GROUP BY country_code, place_name, admin_code1
+            GROUP BY room, floor, dorm
             ORDER BY RANDOM()
             LIMIT 10""",
             sw_lat=sw_lat, ne_lat=ne_lat, sw_lng=sw_lng, ne_lng=ne_lng)
