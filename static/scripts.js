@@ -4,8 +4,6 @@ var map;
 // markers for map
 var markers = [];
 
-// info window
-var info = new google.maps.InfoWindow();
 
 // execute when the DOM is fully loaded
 $(function() {
@@ -119,7 +117,14 @@ $(function() {
  */
 function addMarker(place)
 {
-    // TODO
+    var marker=new google.maps.Marker({
+        position: {lat: place.latitude,lng: place.longitude},
+        title: place.room+', '+place.dorm,
+        label: place.room+', '+place.dorm
+    });
+    marker.setMap(map);
+    
+    markers.append(marker);
 }
 
 /**
@@ -155,7 +160,7 @@ function configure()
         templates: {
             suggestion: Handlebars.compile(
                 "<div>" +
-                "TODO" +
+                "{{room}}, {{floor}}, {{dorm}}"
                 "</div>"
             )
         }
@@ -196,7 +201,10 @@ function configure()
  */
 function removeMarkers()
 {
-    // TODO
+    for (var marker in markers){
+        marker.setMap(null);
+        marker=null;
+    }
 }
 
 /**
@@ -222,33 +230,6 @@ function search(query, syncResults, asyncResults)
         // call typeahead's callback with no results
         asyncResults([]);
     });
-}
-
-/**
- * Shows info window at marker with content.
- */
-function showInfo(marker, content)
-{
-    // start div
-    var div = "<div id='info'>";
-    if (typeof(content) == "undefined")
-    {
-        // http://www.ajaxload.info/
-        div += "<img alt='loading' src='/static/ajax-loader.gif'/>";
-    }
-    else
-    {
-        div += content;
-    }
-
-    // end div
-    div += "</div>";
-
-    // set info window's content
-    info.setContent(div);
-
-    // open info window (if not already open)
-    info.open(map, marker);
 }
 
 /**
