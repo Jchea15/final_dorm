@@ -1,17 +1,6 @@
 // Google Map
 var map;
 
-// testing screenshot overlay
-var overlay;
-
-/**
- * Shouldn't need markers since not adding markers for individual rooms
- * Just zooming in on correct hall/floor
-
-// markers for map
-var markers = [];
-*/
-
 // execute when the DOM is fully loaded
 $(function() {
 
@@ -344,6 +333,34 @@ function configure()
         update();
     });
     
+    // get floor plan images
+    $.getJSON(Flask.url_for("get_images"), parameters)
+        .done(function(data, textStatus, jqXHR) {
+            
+            // iterate through JSON
+            for(var i = 0; i <data.length; i++) {
+              // overlay floor plans
+              var imageBounds = {
+                north: data[i].north,
+                south: data[i].south,
+                west: data[i].west,
+                east: data[i].east
+              };
+              
+              var overlay = new google.maps.GroundOverlay(
+                data.url, imageBounds);
+              overlay.setMap(map);
+              
+            }
+            
+        })
+        .fail(function(jqHXR, textStatus, errorThrown) {
+            
+            // log error to browser's console
+            console.log(errorThrown.toString());
+            
+        });
+    
     /**
      * Temporarily disable this so we can try drop-down menus instead of a search bar
      * 
@@ -376,19 +393,6 @@ http://vignette4.wikia.nocookie.net/creepypasta/images/f/fc/700cow.jpg/revision/
     });
     */
     
-    // overlay screenshot
-    var imageBounds = {
-        north: 42.38284,
-        south: 42.38182,
-        west: -71.12561,
-        east: -71.12442
-    };
-    
-    overlay = new google.maps.GroundOverlay(
-        'http://pngimg.com/upload/cow_PNG2127.png', imageBounds);
-    overlay.setMap(map);
-    
-    
     // re-enable ctrl- and right-clicking (and thus Inspect Element) on Google Map
     // https://chrome.google.com/webstore/detail/allow-right-click/hompjdfbfmmmgflfjdlnkohcplmboaeo?hl=en
     document.addEventListener("contextmenu", function(event) {
@@ -398,7 +402,7 @@ http://vignette4.wikia.nocookie.net/creepypasta/images/f/fc/700cow.jpg/revision/
     }, true);
 
     // update UI
-    update();
+    //update();
     
     /**
      * Not too sure what this is, so I'll comment it out for now
@@ -406,6 +410,10 @@ http://vignette4.wikia.nocookie.net/creepypasta/images/f/fc/700cow.jpg/revision/
     $("#q").focus();
     */
 }
+
+/**
+ * Overlays floor plans on map.
+ */
 
 /**
  * Removes markers from map.

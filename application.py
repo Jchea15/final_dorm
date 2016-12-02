@@ -19,7 +19,7 @@ if app.config["DEBUG"]:
         return response
 
 # configure CS50 Library to use SQLite database
-db = SQL("sqlite:///rooms.db")
+db = SQL("sqlite:///dorm.db")
 
 @app.route("/")
 def index():
@@ -28,16 +28,29 @@ def index():
         raise RuntimeError("API_KEY not set")
     return render_template("index.html", key=os.environ.get("API_KEY"))
 
+@app.route("/get_images")
+def get_images():
+    """Get floor plan images."""
+    
+    # query database for images of current floor
+    rows = db.execute("SELECT * FROM images JOIN imbounds ON images.house = imbounds.house WHERE floor = :floor", 
+                        floor=2)
+    
+    return jsonify([rows])
+
 # temporarily disable so can try drop-downs
 # @app.route("/search")
 # def search():
-#     room=request.args.get("room")+"%"
-#     floor=request.args.get("floor")+"%"
-#     dorm=request.args.get("dorm")+"%"
-#     selection= db.execute("SELECT * FROM rooms WHERE room LIKE :room AND floor LIKE :floor AND dorm LIKE :dorm", room=room, floor=floor, dorm=dorm)
+#     if not request.args.get("room"):
+#        return failure.html
+#     if request.args.get("floor"):
+#         return failure.html
+#     if request.args.get("dorm"):
+#         return failure.html
+#     selection= db.execute("SELECT * FROM rooms WHERE room=:room AND floor=:floor AND dorm=:dorm", room=request.args.get("room"), floor=request.args.get("floor"), dorm=request.args.get("dorm"))
 #     return jsonify(selection)
 
-# don't need to find 10 places?
+# marianne -> but if you drag you want to be able to see rooms, I think we should have this set up
 # @app.route("/update")
 # def update():
 #     """Find up to 10 places within view."""
