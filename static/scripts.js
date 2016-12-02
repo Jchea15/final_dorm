@@ -321,7 +321,12 @@ function addMarker(place)
     markers.append(marker);
 }
  */
- 
+
+
+// image bounds array
+var imageBounds = [];
+
+
 /**
  * Configures application.
  */
@@ -333,22 +338,29 @@ function configure()
         update();
     });
     
+    
+    
     // get floor plan images
-    $.getJSON(Flask.url_for("get_images"), parameters)
+    $.getJSON(Flask.url_for("get_images"))
         .done(function(data, textStatus, jqXHR) {
-            
+          
+          
+            // initialize variable
+            var imageBound;
             // iterate through JSON
-            for(var i = 0; i <data.length; i++) {
+            for(var i = 0; i <data[0].length; i++) {
               // overlay floor plans
-              var imageBounds = {
-                north: data[i].north,
-                south: data[i].south,
-                west: data[i].west,
-                east: data[i].east
+              imageBound = {
+                north: data[0][i].north,
+                south: data[0][i].south,
+                west: data[0][i].west,
+                east: data[0][i].east
               };
               
+              imageBounds.push(imageBound);
+              
               var overlay = new google.maps.GroundOverlay(
-                data.url, imageBounds);
+                data[0][i].url, imageBounds[i]);
               overlay.setMap(map);
               
             }
