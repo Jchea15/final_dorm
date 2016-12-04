@@ -28,10 +28,10 @@ def index():
         raise RuntimeError("API_KEY not set")
     return render_template("index.html", key=os.environ.get("API_KEY"))
 
-@app.route("/get_images",methods=["GET","POST"])
+@app.route("/get_images")
 def get_images():
     """Get floor plan images."""
-    floor=request.args.get("floor")+"%"
+    floor=request.args.get("floor")
     # query database for images of current floor
     rows = db.execute("SELECT * FROM images JOIN imbounds ON images.house = imbounds.house WHERE floor = :floor", 
                         floor=floor)
