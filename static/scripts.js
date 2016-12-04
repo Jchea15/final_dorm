@@ -323,10 +323,6 @@ function addMarker(place)
  */
 
 
-// image bounds array
-var imageBounds = [];
-
-
 /**
  * Configures application.
  */
@@ -338,29 +334,23 @@ function configure()
         update();
     });
     
-    
-    
+   
     // get floor plan images
     $.getJSON(Flask.url_for("get_images"))
         .done(function(data, textStatus, jqXHR) {
           
-          
-            // initialize variable
-            var imageBound;
             // iterate through JSON
             for(var i = 0; i <data[0].length; i++) {
               // overlay floor plans
-              imageBound = {
+              imageBounds = {
                 north: data[0][i].north,
                 south: data[0][i].south,
                 west: data[0][i].west,
                 east: data[0][i].east
               };
               
-              imageBounds.push(imageBound);
-              
               var overlay = new google.maps.GroundOverlay(
-                data[0][i].url, imageBounds[i]);
+                data[0][i].url, imageBounds);
               overlay.setMap(map);
               
             }
@@ -372,6 +362,7 @@ function configure()
             console.log(errorThrown.toString());
             
         });
+    
     
     /**
      * Temporarily disable this so we can try drop-down menus instead of a search bar
