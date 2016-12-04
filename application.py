@@ -31,10 +31,12 @@ def index():
 @app.route("/get_images")
 def get_images():
     """Get floor plan images."""
-    floor=request.args.get("floor")
+    # ensure parameters are present
+    if not request.args.get("floor"):
+        raise RuntimeError("missing floor")
     # query database for images of current floor
     rows = db.execute("SELECT * FROM images JOIN imbounds ON images.house = imbounds.house WHERE floor = :floor", 
-                        floor=floor)
+                        floor=request.args.get("floor"))
     return jsonify([rows])
 
 # temporarily disable so can try drop-downs
@@ -48,50 +50,3 @@ def get_images():
 #         return failure.html
 #     selection= db.execute("SELECT * FROM rooms WHERE room=:room AND floor=:floor AND dorm=:dorm", room=request.args.get("room"), floor=request.args.get("floor"), dorm=request.args.get("dorm"))
 #     return jsonify(selection)
-
-# marianne -> but if you drag you want to be able to see rooms, I think we should have this set up
-# @app.route("/update")
-# def update():
-#     """Find up to 10 places within view."""
-
-#     # ensure parameters are present
-#     if not request.args.get("sw"):
-#         raise RuntimeError("missing sw")
-#     if not request.args.get("ne"):
-#         raise RuntimeError("missing ne")
-
-#     # ensure parameters are in lat,lng format
-#     if not re.search("^-?\d+(?:\.\d+)?,-?\d+(?:\.\d+)?$", request.args.get("sw")):
-#         raise RuntimeError("invalid sw")
-#     if not re.search("^-?\d+(?:\.\d+)?,-?\d+(?:\.\d+)?$", request.args.get("ne")):
-#         raise RuntimeError("invalid ne")
-
-#     # explode southwest corner into two variables
-#     (sw_lat, sw_lng) = [float(s) for s in request.args.get("sw").split(",")]
-
-#     # explode northeast corner into two variables
-#     (ne_lat, ne_lng) = [float(s) for s in request.args.get("ne").split(",")]
-
-#     # find 10 cities within view, pseudorandomly chosen if more within view
-#     if (sw_lng <= ne_lng):
-
-#         # doesn't cross the antimeridian
-#         rows = db.execute("""SELECT * FROM rooms
-#             WHERE :sw_lat <= latitude AND latitude <= :ne_lat AND (:sw_lng <= longitude AND longitude <= :ne_lng)
-#             GROUP BY room, floor, dorm
-#             ORDER BY RANDOM()
-#             LIMIT 10""",
-#             sw_lat=sw_lat, ne_lat=ne_lat, sw_lng=sw_lng, ne_lng=ne_lng)
-
-#     else:
-
-#         # crosses the antimeridian
-#         rows = db.execute("""SELECT * FROM rooms
-#             WHERE :sw_lat <= latitude AND latitude <= :ne_lat AND (:sw_lng <= longitude OR longitude <= :ne_lng)
-#             GROUP BY room, floor, dorm
-#             ORDER BY RANDOM()
-#             LIMIT 10""",
-#             sw_lat=sw_lat, ne_lat=ne_lat, sw_lng=sw_lng, ne_lng=ne_lng)
-
-#     # output places as JSON
-#     return jsonify(rows)

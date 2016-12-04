@@ -305,22 +305,6 @@ $(function() {
 
 });
 
-/**
- * Adds marker for place to map.
- * Shouldn't need this 
-
-function addMarker(place)
-{
-    var marker=new google.maps.Marker({
-        position: {lat: place.latitude,lng: place.longitude},
-        title: place.room+', '+place.dorm,
-        label: place.room+', '+place.dorm
-    });
-    marker.setMap(map);
-    
-    markers.append(marker);
-}
- */
 
 
 /**
@@ -328,15 +312,35 @@ function addMarker(place)
  */
 function configure()
 {
-
-    // update UI after zoom level changes
-    google.maps.event.addListener(map, "zoom_changed", function() {
-        update();
-    });
     
-   
-    // get floor plan images
-    $.getJSON(Flask.url_for("get_images"))
+    // configure dropdown?
+     $('#floor').selectpicker({
+      container: '.main-body'
+    });
+    // get images after floor is selected from dropdown menu
+    get_images(container);
+  
+    
+    // re-enable ctrl- and right-clicking (and thus Inspect Element) on Google Map
+    // https://chrome.google.com/webstore/detail/allow-right-click/hompjdfbfmmmgflfjdlnkohcplmboaeo?hl=en
+    document.addEventListener("contextmenu", function(event) {
+        event.returnValue = true; 
+        event.stopPropagation && event.stopPropagation(); 
+        event.cancelBubble && event.cancelBubble();
+    }, true);
+}
+
+/**
+ * Overlays floor plans on map.
+ */
+
+function get_images(f)
+{
+  var parameters={
+            floor: f
+        };
+    // get floor plan images and overlay
+    $.getJSON(Flask.url_for("get_images"), parameters)
         .done(function(data, textStatus, jqXHR) {
           
             // iterate through JSON
@@ -362,135 +366,4 @@ function configure()
             console.log(errorThrown.toString());
             
         });
-    
-    
-    /**
-     * Temporarily disable this so we can try drop-down menus instead of a search bar
-     * 
-    // configure typeahead
-    $("#q").typeahead({
-        highlight: false,
-        minLength: 1
-    },
-    {
-        display: function(suggestion) { return null; },
-        limit: 10,
-        source: search,
-        templates: {
-            suggestion: Handlebars.compile(
-                "<div>"+"{{room}}, {{floor}}, {{dorm}}"+ "</div>"
-            ),
-            notFound: "<div>This is not a Harvard dorm</div>"
-        }
-    });
-
-    // re-center map after place is selected from drop-down
-    $("#q").on("typeahead:selected", function(eventObject, suggestion, name) {
-
-        // set map's centerhttp://pngimg.com/upload/cow_PNG2127.png
-        map.setCenter({lat: parseFloat(suggestion.latitude), lng: parseFloat(suggestion.longitude)});
-        map.setZoom(14);
-http://vignette4.wikia.nocookie.net/creepypasta/images/f/fc/700cow.jpg/revision/latest?cb=20110412003057
-        // update UI
-        update();
-    });
-    */
-    
-    // re-enable ctrl- and right-clicking (and thus Inspect Element) on Google Map
-    // https://chrome.google.com/webstore/detail/allow-right-click/hompjdfbfmmmgflfjdlnkohcplmboaeo?hl=en
-    document.addEventListener("contextmenu", function(event) {
-        event.returnValue = true; 
-        event.stopPropagation && event.stopPropagation(); 
-        event.cancelBubble && event.cancelBubble();
-    }, true);
-
-    // update UI
-    //update();
-    
-    /**
-     * Not too sure what this is, so I'll comment it out for now
-    // give focus to text box
-    $("#q").focus();
-    */
 }
-
-/**
- * Overlays floor plans on map.
- */
-
-/**
- * Removes markers from map.
- * Again, shouldn't need this if not using markers
-
-function removeMarkers()
-{
-    for (var marker in markers){
-        marker.setMap(null);
-        marker=null;
-    }
-}
- */
- 
-/**
- * Searches database for typeahead's suggestions.
- * Temporarily disable to try drop-down menus
-
-function search(query, syncResults, asyncResults)
-{
-    // get places matching query (asynchronously)
-    var parameters = {
-        q: query
-    };
-    $.getJSON(Flask.url_for("search"), parameters)
-    .done(function(data, textStatus, jqXHR) {
-     
-        // call typeahead's callback with search results (i.e., places)
-        asyncResults(data);
-    })
-    .fail(function(jqXHR, textStatus, errorThrown) {
-
-        // log error to browser's console
-        console.log(errorThrown.toString());
-
-        // call typeahead's callback with no results
-        asyncResults([]);
-    });
-}
- */
-
-/**
- * Updates UI's markers.
- * Shouldn't need if not using markers
-
-function update() 
-{
-    // get map's bounds
-    var bounds = map.getBounds();
-    var ne = bounds.getNorthEast();
-    var sw = bounds.getSouthWest();
-
-    // get places within bounds (asynchronously)
-    var parameters = {
-        ne: ne.lat() + "," + ne.lng(),
-        q: $("#q").val(),
-        sw: sw.lat() + "," + sw.lng()
-    };
-    $.getJSON(Flask.url_for("update"), parameters)
-    .done(function(data, textStatus, jqXHR) {
-
-       // remove old markers from map
-       removeMarkers();
-
-       // add new markers to map
-       for (var i = 0; i < data.length; i++)
-       {
-           addMarker(data[i]);
-       }
-    })
-    .fail(function(jqXHR, textStatus, errorThrown) {
-
-        // log error to browser's console
-        console.log(errorThrown.toString());
-    });
-};
- */
