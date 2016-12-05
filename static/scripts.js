@@ -1,6 +1,9 @@
 // Google Map
 var map;
 
+// floor plan overlay
+var overlays = [];
+
 // execute when the DOM is fully loaded
 $(function() {
 
@@ -312,15 +315,6 @@ $(function() {
  */
 function configure()
 {
-    
-    // configure dropdown?
-     $('#floor').selectpicker({
-      container: '.main-body'
-    });
-    // get images after floor is selected from dropdown menu
-    get_images(container);
-  
-    
     // re-enable ctrl- and right-clicking (and thus Inspect Element) on Google Map
     // https://chrome.google.com/webstore/detail/allow-right-click/hompjdfbfmmmgflfjdlnkohcplmboaeo?hl=en
     document.addEventListener("contextmenu", function(event) {
@@ -331,32 +325,24 @@ function configure()
 }
 
 /**
- * Overlays floor plans on map.
+ * Update floor plans on map.
  */
 
-function get_images(f)
+function update(f)
 {
-  var parameters={
+    // get floor plan images
+    var parameters={
             floor: f
         };
-    // get floor plan images and overlay
-    $.getJSON(Flask.url_for("get_images"), parameters)
+    $.getJSON(Flask.url_for("update"), parameters)
         .done(function(data, textStatus, jqXHR) {
           
-            // iterate through JSON
+            // remove old overlays from map
+            removeOverlays();
+            
+            // add new overlays for each house to map
             for(var i = 0; i <data[0].length; i++) {
-              // overlay floor plans
-              imageBounds = {
-                north: data[0][i].north,
-                south: data[0][i].south,
-                west: data[0][i].west,
-                east: data[0][i].east
-              };
-              
-              var overlay = new google.maps.GroundOverlay(
-                data[0][i].url, imageBounds);
-              overlay.setMap(map);
-              
+              addOverlay(data[0][i]);
             }
             
         })
@@ -366,4 +352,40 @@ function get_images(f)
             console.log(errorThrown.toString());
             
         });
+    
+}
+
+/**
+ * Overlay floor plan of 1 house on map.
+ */
+
+function addOverlay(datarow)
+{
+    // get floor plan images and overlay
+    imageBounds = {
+      north: datarow.north,
+      south: datarow.south,
+      west: datarow.west,
+      east: datarow.east
+    };
+    
+    var overlay = new google.maps.GroundOverlay(
+      datarow.url, imageBounds);
+    overlay.setMap(map);
+    
+    // add overlay to overlays array
+    overlays.push(overlay);
+    
+}
+
+/**
+ * Remove all floor plan overlays from map.
+ */
+
+function removeOverlays()
+{
+  // remove overlays from map
+  for (var i = 0; i<overlays.length; i++) {
+    overlays[i].setMap(null);
+  }
 }

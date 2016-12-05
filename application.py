@@ -28,15 +28,19 @@ def index():
         raise RuntimeError("API_KEY not set")
     return render_template("index.html", key=os.environ.get("API_KEY"))
 
-@app.route("/get_images")
-def get_images():
-    """Get floor plan images."""
+@app.route("/update")
+def update():
+    """Update floor plan images."""
+    
     # ensure parameters are present
     if not request.args.get("floor"):
         raise RuntimeError("missing floor")
+    
     # query database for images of current floor
     rows = db.execute("SELECT * FROM images JOIN imbounds ON images.house = imbounds.house WHERE floor = :floor", 
                         floor=request.args.get("floor"))
+    
+    # output images as JSON
     return jsonify([rows])
 
 # temporarily disable so can try drop-downs
