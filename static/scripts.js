@@ -309,7 +309,6 @@ $(function() {
 });
 
 
-
 /**
  * Configures application.
  */
@@ -325,7 +324,7 @@ function configure()
 }
 
 /**
- * Update floor plans on map.
+ * Updates floor plans on map.
  */
 
 function update(f)

@@ -24,6 +24,8 @@ db = SQL("sqlite:///dorm.db")
 @app.route("/")
 def index():
     """Render map."""
+    
+    # check if API key is set
     if not os.environ.get("API_KEY"):
         raise RuntimeError("API_KEY not set")
     return render_template("index.html", key=os.environ.get("API_KEY"))
@@ -42,15 +44,3 @@ def update():
     
     # output images as JSON
     return jsonify([rows])
-
-# temporarily disable so can try drop-downs
-# @app.route("/search")
-# def search():
-#     if not request.args.get("room"):
-#        return failure.html
-#     if request.args.get("floor"):
-#         return failure.html
-#     if request.args.get("dorm"):
-#         return failure.html
-#     selection= db.execute("SELECT * FROM rooms WHERE room=:room AND floor=:floor AND dorm=:dorm", room=request.args.get("room"), floor=request.args.get("floor"), dorm=request.args.get("dorm"))
-#     return jsonify(selection)

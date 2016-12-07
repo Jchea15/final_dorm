@@ -38,46 +38,30 @@
 
     </head>
     <body>
-    <!-- fill viewport -->
-    <div class="container-fluid">
-        <!-- https://developers.google.com/maps/documentation/javascript/tutorial -->
-        <div id="map-canvas"></div>
-        <!-- http://getbootstrap.com/css/#forms -->
-        <form id="form">
-            <!-- http://getbootstrap.com/components/#input-groups-->
-            <div class="dropdown">
-              <button class="btn btn-default dropdown-toggle" type="button" id="floor" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                Floor
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                <li><a href="#" onclick="update(B)">B</a></li>
-                <li><a href="#" onclick="update(1)">1</a></li>
-                <li><a href="#" onclick="update(2)">2</a></li>
-                <li><a href="#" onclick="update(3)">3</a></li>
-                <li><a href="#" onclick="update(4)">4</a></li>
-                <li><a href="#" onclick="update(5)">5</a></li>
-              </ul>
+        <!-- fill viewport -->
+        <div class="container-fluid">
+            <!-- Google Maps -->
+            <!-- https://developers.google.com/maps/documentation/javascript/tutorial -->
+            <div id="map-canvas"></div>
+                <form id="form">
+                    <!-- Bootstrap dropdown -->
+                    <!-- http://getbootstrap.com/components/#input-groups -->
+                    <div class="dropdown">
+                      <button class="btn btn-default dropdown-toggle" type="button" id="floor" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        Floor
+                        <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li><a href="#" onclick="update(0)">B</a></li>
+                        <li><a href="#" onclick="update(1)">1</a></li>
+                        <li><a href="#" onclick="update(2)">2</a></li>
+                        <li><a href="#" onclick="update(3)">3</a></li>
+                        <li><a href="#" onclick="update(4)">4</a></li>
+                        <li><a href="#" onclick="update(5)">5</a></li>
+                      </ul>
+                    </div>
+                </form>
             </div>
-            
-            <!-- http://getbootstrap.com/components/#input-groups
-            <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Floor <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a href="B">B</a></li>
-                    <li><a href="1">1</a></li>
-                    <li><a href="2">2</a></li>
-                    <li><a href="3">3</a></li>
-                    <li><a href="4">4</a></li>
-                    <li><a href="5">5</a></li>
-                </ul>
-                -->
-            </div>
-        </form>
-        
-    </div>
-
+        </div>
     </body>
 </html>
