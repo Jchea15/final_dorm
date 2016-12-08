@@ -9,7 +9,7 @@ $(function() {
 
     // styles for map
     // https://developers.google.com/maps/documentation/javascript/styling
-    // made w/wizard: https://mapstyle.withgoogle.com/
+    // made with wizard: https://mapstyle.withgoogle.com/
     var styles = [
   {
     "elementType": "geometry",
@@ -302,18 +302,7 @@ $(function() {
 
     // instantiate map
     map = new google.maps.Map(canvas, options);
-
-    // configure UI once Google Map is idle (i.e., loaded)
-    google.maps.event.addListenerOnce(map, "idle", configure);
-
-});
-
-
-/**
- * Configures application.
- */
-function configure()
-{
+    
     // re-enable ctrl- and right-clicking (and thus Inspect Element) on Google Map
     // https://chrome.google.com/webstore/detail/allow-right-click/hompjdfbfmmmgflfjdlnkohcplmboaeo?hl=en
     document.addEventListener("contextmenu", function(event) {
@@ -321,7 +310,8 @@ function configure()
         event.stopPropagation && event.stopPropagation(); 
         event.cancelBubble && event.cancelBubble();
     }, true);
-}
+
+});
 
 /**
  * Updates floor plans on map.

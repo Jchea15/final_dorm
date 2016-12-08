@@ -1,0 +1,67 @@
+    Since we wanted to use the Google Maps API for our website, we used the code 
+from Problem Set 8 as our template.  In particular, we used parts of scripts.js,
+index.html, and applications.py because they contained code we could use as the
+basis for our map. For example, scripts.js had code that set up a map for us 
+based on Google Maps documentation, and gave us the ability to set the style of
+the map to resemble that of Problem Set 8, which was very easy to navigate due 
+to the fact that CS50 had already written in the fact, for example, labels for 
+roads and transit lines were not visible.  But we wanted to add a few more 
+stylistic features like removing building labels for a cleaner appearance, so we
+generated a new styles array using the Google Maps APIs Styling Wizard found at 
+https://mapstyle.withgoogle.com/. In addition, using the code that made the map 
+in Problem Set 8 appealing made it easier to change the things that were not 
+helpful to the project, such as the center of the map, which is now set to the 
+quad, or the zoom, which starts off more zoomed in.  Index.html proved to be 
+helpful as well as it already had lines of code that imported useful documentation
+from Google Maps, bootstrap, and jquery, which we knew we would need later on.   
+Finally, we kept the basis of applications.py, in particular index because it allows
+us to render the map.
+
+	Having used the documentation from Problem Set 8 as a basis, however, we began 
+to change things as was necessary to our project.  The most important thing we 
+needed to change was the structure of our database (dorm.db) so that it could hold
+the floor plans.  In Photoshop, we rotated and resized the floor plan images so 
+that they would match the alignments of the buildings on the map. Then we uploaded 
+them to Flickr so each photo could have a unique URL.  To avoid redundancy in the 
+tables, we set up dorm.db to contain two tables: images and imbounds.  Images 
+contains the url, house, and floor of each floor plan, and imbounds contains the 
+house and north, south, east, and west coordinates of the houses.  For Cabot and 
+Currier we could put all of the house’s buildings in one image, but for Pfoho, since
+the Jordans are so far away from the main building, we had to split it up into 
+Pfoho_Main and Pfoho_Jordans.  With the databases set up, we could proceed to write
+code in application.py that would access the database.
+
+	In application.py we have two routes: index and update.  Index is just used to 
+ensure that the API key is set before rendering the map as specified in index.html, 
+which will be explained later.  Update is the route we are using to access the dorm.db
+SQL database.  After checking that the floor number has been provided, it joins the
+images table to the imbounds table based on house, then selects the rows that match
+the provided floor number.  The 4 rows containing the image url, house, and coordinates
+for the floor plans for the matching floor number are returned as a JSON array to be
+used in the scripts.js file.
+
+	The scripts.js file implements the front-end UI.  The first function is an anonymous
+function that is executed when the DOM is fully loaded.  It defines styles and options
+arrays to configure the map with colors, label visibility, and zoom level, and then 
+instantiates the map.  There are also a few lines to re-enable Inspect Element on Google
+Map so that we can view the console for troubleshooting.  The second function is update, 
+and it is used to update the floor plan images on the map.  It passes the floor number to 
+/update with a GET request, and if the JSON is successfully returned, it calls the 
+removeOverlays function to remove any current floor plans on the map (to prevent 
+overlapping images), and then iterates through the JSON to load the new images onto the 
+map with the addOverlay function.  The addOverlay and removeOverlays functions were 
+written by referencing the documentation at 
+https://developers.google.com/maps/documentation/javascript/groundoverlays#introduction. 
+
+	The layout of the actual website is shown in index.html. The viewport is filled with 
+the map, and then there is a dropdown menu that can be used to select the desired floor 
+number.  We decided to do this through a dropdown menu instead of a search bar since it 
+makes more sense if there are only a limited number of floors.  The menu is an unordered
+list of hyperlinks that don’t go anywhere because this is the cleanest-looking dropdown 
+menu we could find.  When one of the options is clicked, it runs the Javascript function
+update with the corresponding floor number as a parameter so that any current floor 
+plans on the map are removed and the new ones are added.
+
+	The last two files in the folder are styles.css and requirements.txt, and we used 
+them directly from Problem Set 8. Styles.css is just some CSS that implements the default
+UI, and requirements.txt was used to install the dependencies.

@@ -1,0 +1,56 @@
+	For this project, we wanted to make it easier for Harvard students to navigate around 
+dorms in the Harvard-Radcliffe Quadrangle rather than have to search for random maps 
+around Harvard.  In particular, when students have to go to another floor of a dorm, it 
+should be easier to find where to go within the building once inside.  To address this 
+problem, we used Google Maps and floor plans of the different halls in the Quad to make 
+maps fast and easy to access and make finding different floors a fast process.  
+
+	To use the map, one begins by accessing the CS50 IDE terminal and downloading our 
+project folder (final_dorm). Then, change the current directory to the final_dorm folder
+and execute pip install --user -r requirements.txt to install the dependencies. 
+
+    To be able to access the Google Map, one must have an API key, which is provided by 
+Google to allow people to embed Google Maps into apps of any sort.  Without this key, 
+no further steps will work as there will be no way to access a map, so it is imperative 
+that you input this key.  Then one can put in the flask run line of code, which allows 
+us to use the framework we’ve set up to run this application.  Without flask, there would
+be no web server, as it has this functionality built in and will include all the features
+we want because it encapsulates all our code.  In case one forgets, this is provided in 
+the WebServer.txt file to make it easy for users to copy and paste the necessary commands 
+into the command terminal.
+
+	This may be confusing as it does not immediately enter a webpage.  However, this is 
+to be expected, as this only provides the necessary environment to access the website. 
+To actually access the website, one can click on the tab labelled CS50 IDE in the top left 
+corner of the site and click on a tab called Web Server to actually launch the web server.  
+This should open a pop-up next to the screen one is currently looking at, which one should 
+promptly switch over to, taking care not to exit out of the CS50 IDE one is currently on as 
+this is running the website.
+
+	On the new website, there should be a fully loaded map displaying the Harvard-Radcliffe 
+Quadrangle.  However, there should be nothing else on it, as in no pictures of maps.  This 
+may be confusing as the website is meant to be used to see floor plans, but we’ve enabled 
+it to be like this so you, the user, may click on any floor to view it when necessary without
+assuming you are on the ground floor.  To find the floor of interest, one can click on the 
+“Floor” drop down menu in the top left corner and select the floor one wishes to view floor 
+plans for by simply clicking on it.  There is no need to press a submit button of any kind, 
+clicking on the floor one wants should be enough to change the screen.  It may take a second 
+or two for the floor plan images to show up, since the images had to be very high resolution 
+so that the room numbers could be legible, but you should know it has worked if after a few 
+seconds you see floor plans on top of what once was the outline of buildings.
+
+	To actually find your way around, it is now as easy as finding the hall one is in 
+and looking at its floor plan.  To access the hall of interest to you, you can simply 
+click and drag the map to move around and use the plus and minus buttons in the bottom 
+right corner or scroll up and down to zoom in and out. The floor plans should scale 
+accordingly, and when you’ve found the zoom and hall that you like, you can then begin 
+moving around, still using the drag, to find the place you want to go to and where you 
+are now.  The room numbers and types of rooms should be visible even at higher zoom, 
+so all you have to do is find the right direction to go in and you should be on your way!
+
+    If you wish to change the floor you’re viewing because you’ve gone up or down the 
+stairs, do not use the plus and minus buttons in the bottom right corner.  Instead, 
+use the “Floor” drop down menu that you used before to choose the floor you initially 
+wanted, which is located in the top left corner, to select a new floor. The website 
+will remove the previous floor’s overlays and load new overlays, which may take bit 
+longer, but should give you the floor plans you want accordingly.
